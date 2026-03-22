@@ -1,67 +1,69 @@
-# 🇮🇳 XDC India
+<p align="center">
+  <img src="https://raw.githubusercontent.com/XDCIndia/.github/main/profile/xdc-india-logo.png" width="120" alt="XDC India">
+</p>
 
-**Multi-client blockchain infrastructure for [XDC Network](https://xdc.org)**
+<h1 align="center">🇮🇳 XDC India</h1>
 
-Building client diversity and enterprise-grade tooling for the XDC ecosystem.
+<p align="center">
+  <strong>Multi-client blockchain infrastructure for <a href="https://xdc.org">XDC Network</a></strong><br>
+  Building client diversity and enterprise-grade tooling for the XDC ecosystem.
+</p>
+
+<p align="center">
+  <a href="https://xdcindia.com">Website</a> •
+  <a href="https://skynet.xdcindia.com">SkyNet</a> •
+  <a href="https://stats.xdcindia.com">Ethstats</a> •
+  <a href="https://api.xdcindia.com">API</a>
+</p>
 
 ---
 
-## 🔧 What We Build
+## 🔧 Blockchain Clients
 
-### Blockchain Clients
-| Client | Language | Status | Description |
-|--------|----------|--------|-------------|
-| **[GP5](https://github.com/XDCIndia/go-ethereum)** | Go | 🟢 Active | Next-gen geth fork with XDPoS v1+v2 consensus |
-| **[Erigon-XDC](https://github.com/XDCIndia/erigon-xdc)** | Go | 🟢 Active | High-performance Erigon fork for XDC |
-| **[Nethermind-XDC](https://github.com/XDCIndia/xdc-nethermind-private)** | C# | 🟢 Active | .NET client with XDPoS consensus |
-| **[Reth-XDC](https://github.com/XDCIndia/reth)** | Rust | 🟡 In Progress | Reth fork — fastest execution layer |
+| Client | Language | Branch | Status | Description |
+|--------|----------|--------|--------|-------------|
+| **GP5** | Go | `xdc-network` | 🟢 Active | Next-gen geth fork — XDPoS v1+v2, 28x sync speed |
+| **Erigon-XDC** | Go | `feature/xdc-network` | 🟢 Active | High-performance Erigon — eth/62-63 protocol |
+| **Nethermind-XDC** | C# | `main` | 🟢 Active | .NET client — state root bypass, 300K+ blocks |
+| **Reth-XDC** | Rust | `xdcnetwork-rebase` | 🟡 WIP | Fastest execution layer — FCU feeder sync |
 
-### Infrastructure
+## 🛠️ Infrastructure
+
 | Project | Description |
 |---------|-------------|
-| **[XDC Node Setup](https://github.com/XDCIndia/xdc-node-setup)** | Enterprise-grade node deployment toolkit with CLI |
-| **[SkyNet](https://skynet.xdcindia.com)** | Network monitoring dashboard + API |
-| **[Ethstats](https://stats.xdcindia.com)** | Real-time node statistics |
+| **XDC Node Setup** | Enterprise CLI toolkit — Docker, multi-client, SkyNet monitoring |
+| **SkyNet** | Network monitoring dashboard — 7 servers, 14+ nodes |
+| **Ethstats** | Real-time block propagation and peer statistics |
+
+## 🌐 Network
+
+- **Mainnet** (Chain 50) — 7+ GP5 nodes syncing across 7 servers
+- **Apothem** (Chain 51) — Full testnet coverage
+- **4 clients** running in parallel for client diversity
+
+## 📊 Architecture
+
+```
+┌──────────────────────────────────────────────┐
+│              XDC Network (Layer 1)            │
+├──────────┬──────────┬───────────┬────────────┤
+│   GP5    │  Erigon  │ Nethermind│    Reth    │
+│  (Go)    │  (Go)    │   (C#)   │   (Rust)   │
+├──────────┴──────────┴───────────┴────────────┤
+│          XDPoS v1 + v2 Consensus              │
+├──────────────────────────────────────────────┤
+│   SkyNet Monitoring  │  Ethstats  │   CLI     │
+└──────────────────────────────────────────────┘
+```
+
+## 👨‍💻 Team
+
+Built by **[Anil Chinchawale](https://github.com/AnilChinchawale)**
 
 ---
 
-## 🌐 Network Coverage
-
-- **XDC Mainnet** (Chain 50) — 7+ nodes across 7 servers
-- **XDC Apothem Testnet** (Chain 51) — Full coverage
-- **Multi-client sync** — GP5, Erigon, Nethermind running in parallel
-
-## 📊 Live Dashboards
-
-| Dashboard | URL |
-|-----------|-----|
-| SkyNet | [skynet.xdcindia.com](https://skynet.xdcindia.com) |
-| Ethstats | [stats.xdcindia.com](https://stats.xdcindia.com) |
-| SkyNet API | [api.xdcindia.com](https://api.xdcindia.com) |
-
----
-
-## 🏗️ Architecture
-
-```
-┌─────────────────────────────────────────────┐
-│              XDC Network (Layer 1)           │
-├──────────┬──────────┬──────────┬────────────┤
-│   GP5    │  Erigon  │Nethermind│   Reth     │
-│  (Go)    │  (Go)    │  (C#)   │  (Rust)    │
-├──────────┴──────────┴──────────┴────────────┤
-│         XDPoS v1 + v2 Consensus              │
-├─────────────────────────────────────────────┤
-│    SkyNet Monitoring  │  Ethstats  │  CLI    │
-└─────────────────────────────────────────────┘
-```
-
-## 🤝 Team
-
-Built by **[Anil Chinchawale](https://github.com/AnilChinchawale)** and contributors.
-
-## 📫 Contact
-
-- Website: [xdcindia.com](https://xdcindia.com)
-- GitHub: [@XDCIndia](https://github.com/XDCIndia)
-- Telegram: [@AnilChinchawale](https://t.me/AnilChinchawale)
+<p align="center">
+  <a href="https://xdcindia.com">xdcindia.com</a> •
+  <a href="https://t.me/AnilChinchawale">Telegram</a> •
+  <a href="https://github.com/XDCIndia">GitHub</a>
+</p>
