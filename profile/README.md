@@ -177,7 +177,7 @@
 
 ## 👨‍💻 Team
 
-Built by **[Anil Chinchawale](https://github.com/AnilChinchawale)** and contributors.
+Built by **dAI Team**
 
 ---
 
