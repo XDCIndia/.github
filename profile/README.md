@@ -103,25 +103,7 @@
 
 ---
 
-## ⚡ XDC v2.6.8 vs Multi-Client Comparison
-
-| Feature | XDC v2.6.8 (Current) | GP5 | Erigon-XDC | Nethermind-XDC | Reth-XDC |
-|---------|---------------------|-----|------------|----------------|----------|
-| **Language** | Go | Go | Go | C# | Rust |
-| **Sync Speed** | ~180 blk/min | **5,100 blk/min** ⚡ | ~500 blk/min | ~86 blk/s | Pipeline |
-| **State Scheme** | Hash only | **Hash + Path (PBSS)** | MDBX | Hash | MDBX |
-| **Disk Usage** | High (~2TB) | Moderate | **Low (~500GB)** | Moderate | **Lowest** |
-| **Memory** | 8-16GB | Up to 32GB | **2-4GB** | 8-16GB | **2-4GB** |
-| **P2P Protocol** | eth/62, 63, 100 | eth/62, 63, 100 | eth/62, 63 | eth/62, 63, 100 | eth/100 (WIP) |
-| **Consensus** | XDPoS v1+v2 | XDPoS v1+v2 | XDPoS v1+v2 | XDPoS v1+v2 | XDPoS v1 (WIP) |
-| **Snap/Fast Sync** | ❌ | ❌ (full only) | ✅ Stage-based | ❌ | ✅ Pipeline |
-| **Pruning** | ❌ | ✅ (PBSS) | ✅ (native) | ✅ | ✅ (native) |
-| **SkyNet Monitoring** | ❌ | ✅ | ✅ | ✅ | ✅ |
-| **Auto-heal** | ❌ | ✅ (SkyOne) | ✅ (SkyOne) | ✅ (SkyOne) | ✅ (SkyOne) |
-| **Cross-client Validation** | ❌ | ✅ | ✅ | ✅ | ✅ |
-| **Production Ready** | ✅ Stable | 🟡 Syncing | 🟡 7.4M blocks | 🟡 300K blocks | 🔴 ECIES blocked |
-
-## 🏗️ Architecture Comparison (Theoretical/Design Advantages)
+## ⚡ XDC v2.6.8 vs Multi-Client — Architecture & Performance Comparison
 
 > Comparing the fundamental design characteristics of each client — independent of current sync status.
 
@@ -180,46 +162,6 @@
 | **Best historical queries** | Erigon, Reth | Temporal history stored natively — no archive node needed |
 | **Different bug classes** | NM (C#), Reth (Rust) | A Go runtime bug can't affect C#/.NET or Rust clients simultaneously |
 | **Easiest upstream rebase** | GP5 | Same codebase as v2.6.8 — minimal merge conflicts |
-
-## 📋 Feature Parity Matrix (All Clients vs v2.6.8)
-
-> ✅ Implemented | 🔶 Partial | 🔧 In Progress | ❌ Not Started
-
-| Feature | v2.6.8 | GP5 | Erigon | NM | Reth |
-|---------|--------|-----|--------|----|------|
-| **V1 Consensus (Verify)** | ✅ | ✅ | ✅ | ✅ | ❌ |
-| **V1 Consensus (Seal/Mine)** | ✅ | ✅ | 🔶 | ❌ | ❌ |
-| **V2 HotStuff BFT (Verify)** | ✅ | ✅ | ✅ | 🔶 | ❌ |
-| **V2 HotStuff BFT (Participate)** | ✅ | ✅ | ❌ | ❌ | ❌ |
-| **Block Rewards (Checkpoint)** | ✅ | ✅ | ✅ | ✅ | ❌ |
-| **Tiered Rewards (MN/Protector/Observer)** | ✅ | ✅ | 🔶 | ❌ | ❌ |
-| **Epoch Management** | ✅ | ✅ | ✅ | 🔶 | ❌ |
-| **Snapshot System** | ✅ | ✅ | ✅ | 🔶 | ❌ |
-| **Forensics (Double-Sign Detection)** | ✅ | ✅ | ❌ | ❌ | ❌ |
-| **Vote/Timeout/SyncInfo (Receive)** | ✅ | ✅ | 🔶 | 🔶 | ❌ |
-| **Vote/Timeout/SyncInfo (Broadcast)** | ✅ | ✅ | ❌ | ❌ | ❌ |
-| **XDPoS RPC API** | ✅ | ✅ | 🔶 | ❌ | ❌ |
-| **P2P eth/62+63** | ✅ | ✅ | ✅ | ✅ | 🔶 |
-| **P2P eth/100 (XDPoS v2)** | ✅ | ✅ | 🔶 | 🔶 | 🔶 |
-| **State Root Handling** | ✅ | ✅ | ✅ (bypass) | ✅ (bypass) | ❌ |
-| **0x88 Validator Contract** | ✅ | ✅ | 🔶 | 🔶 | ❌ |
-| **0x89 BlockSigner Contract** | ✅ | ✅ | 🔶 | ✅ | ❌ |
-| **TRC21 Token Support** | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **XDC 18-Field Headers** | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Genesis (Mainnet + Apothem)** | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **PREVRANDAO Keccak256** | ✅ | ✅ | 🔧 | ✅ | ❌ |
-| **EIP-158 Disabled** | ✅ | ✅ | ✅ | ✅ | 🔶 |
-| **SkyNet Integration** | ❌ | ✅ | ✅ | ✅ | ✅ |
-| **Mainnet Full Sync** | ✅ | 🟡 88% | 🟡 45% | 🟡 14% | 🔴 7% |
-
-## 📈 Completion Progress
-
-| Client | Issues | Closed | Open | Completion | ETA to Parity |
-|--------|--------|--------|------|------------|---------------|
-| **GP5** (Go) | 36 | 26 | 10 | **88%** 🟢 | ~40h |
-| **Erigon-XDC** (Go) | 66 | 30 | 36 | **45%** 🟡 | ~272h |
-| **NM-XDC** (C#) | 28 | 4 | 24 | **14%** 🟠 | ~280h |
-| **Reth-XDC** (Rust) | 29 | 1 | 28 | **7%** 🔴 | ~436h |
 
 ## 🛡️ Why Multi-Client Matters
 
