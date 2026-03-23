@@ -38,6 +38,28 @@
 
 ---
 
+## 📊 At a Glance: Why Upgrade from v2.6.8?
+
+| What You Care About | v2.6.8 (Now) | Best Alternative | Your Gain |
+|:--------------------|:-------------|:-----------------|:----------|
+| **💾 Disk Space** | ~2 TB archive | **Reth: ~700 GB** | **65% smaller** — Save $50-100/mo |
+| **⚡ Sync Speed** | ~3 blocks/sec | **GP5: 85 blocks/sec** | **28x faster** — Hours not weeks |
+| **🚀 RPC Speed** | ~50 ms response | **Reth: ~3 ms** | **17x faster** — Snappy dApps |
+| **💰 Server Costs** | 1-2 nodes/server | **Reth: 10-12 nodes** | **6-10x density** — Same hardware, more capacity |
+| **🛡️ Security** | Single Go runtime | **4 different runtimes** | **CVE isolation** — 75% blast radius reduction |
+| **🔧 Maintenance** | Manual restarts | **SkyNet auto-heal** | **Self-healing fleet** |
+
+### Quick Picks
+
+| If You Want... | Choose | Because |
+|:---------------|:-------|:--------|
+| Fastest upgrade, same codebase | **GP5** | 28x sync, drop-in replacement |
+| Cheapest archive node | **Reth** | 65% less disk, lowest RAM |
+| Best RPC performance | **Erigon** | 10x throughput, no stalls |
+| Enterprise .NET stack | **Nethermind** | JIT EVM, native APM tooling |
+
+---
+
 ## 🏗️ Current Architecture (Single Client)
 
 > How XDC Network runs today — one client, limited tooling
