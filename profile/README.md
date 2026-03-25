@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/XDCIndia/.github/main/profile/xdc-india-logo.png" width="120" alt="XDC India">
+  <img src="https://raw.githubusercontent.com/XDCIndia/.github/main/profile/xdc-india-logo.png" width="120" alt="XDC Innovation Labs">
 </p>
 
-<h1 align="center">🇮🇳 XDC India</h1>
+<h1 align="center">XDC Innovation Labs</h1>
 
 <p align="center">
   <strong>Multi-client blockchain infrastructure for <a href="https://xdc.org">XDC Network</a></strong><br>
@@ -91,7 +91,7 @@
 
 ## 🚀 Future-Ready Architecture (Multi-Client + SkyNet)
 
-> What XDC India is building — 4 clients, full observability, self-healing
+> What XDC Innovation Labs is building — 4 clients, full observability, self-healing
 
 ```
 ┌────────────────────────────────────────────────────────────┐
@@ -125,58 +125,55 @@
 
 ---
 
-## 🏗️ Architecture Comparison (Theoretical/Design Advantages)
+## Architecture Comparison
 
-> Comparing the fundamental design characteristics of each client — independent of current sync status.
-> All claims validated against source code: v2.6.8 (LevelDB), GP5 (PebbleDB), Erigon (MDBX), Nethermind (RocksDB), Reth (libmdbx).
+> XDC 2.6.8 is a fork of Go-Ethereum 1.8.3 (2017). The table below compares fundamental design characteristics against the current generation of Ethereum-compatible clients — independent of XDPoS porting status.
 
-| Metric | v2.6.8 (Go/LevelDB) | GP5 (Go/LevelDB+Pebble) | Erigon-XDC (Go/MDBX) | NM-XDC (C#/.NET 9) | Reth-XDC (Rust/MDBX) |
-|--------|---------------------|------------------------|-----------------------|--------------------|---------------------|
-| **Database Engine** | LevelDB (LSM-tree) | LevelDB + PebbleDB | MDBX (B+ tree, zero-copy) | RocksDB (LSM-tree) | MDBX (B+ tree, zero-copy) |
-| **Read Amplification** | High (LSM compaction, 10-30x) | Moderate (Pebble optimized) | **Low (single B+ lookup)** | Moderate (bloom filters) | **Low (single B+ lookup)** |
-| **Write Amplification** | High (10-30x) | Moderate | **Low (1-3x)** | Moderate | **Low (1-3x)** |
-| **Sync Architecture** | Full sync only | Full + Snap sync | **8-stage pipeline** | Full + Fast + Snap | **13-stage pipeline** |
-| **Memory Model** | In-process GC | In-process GC | **Memory-mapped I/O** | **Managed .NET GC** (JIT) | **Zero-copy MDBX** (no GC) |
-| **Theoretical Disk Usage** | Baseline (100%) | ~95% (PBSS reduces) | **~40-60%** (flat DB, no trie) | ~70-80% (RocksDB) | **~35-50%** (flat DB, no trie) |
-| **Archive Node Disk** | ~2 TB (full trie history) | ~1.8 TB | **~800 GB** (flat state + history index) | ~1.2 TB | **~700 GB** (flat state + receipt index) |
-| **Theoretical Peak RAM** | 8-16 GB | 8-32 GB | **2-8 GB** (mmap) | 4-8 GB (.NET) | **2-6 GB** (mmap) |
-| **Language Safety** | Go (GC, race detector) | Go (GC, race detector) | Go (GC, race detector) | **C# (GC + JIT + null safety)** | **Rust (compile-time memory safety)** |
-| **Concurrency Model** | Goroutines | Goroutines | Goroutines + staged | **Task-based async (.NET TPL)** | **Tokio async + Rayon** |
-| **State Storage** | Hash trie only | Hash + **Path-based (PBSS)** | **Flat key-value** + history | Patricia trie (RocksDB) | **Flat key-value** + history |
-| **State Snapshot Support** | None (full trie traversal) | **PBSS** (online, no downtime) | **Flat state** (instant lookup) | Snap sync supported | **Flat state** (instant lookup) |
-| **Historical State** | Archive node only | Archive or PBSS | **Native** (separate history tables) | Archive node | **Native** (separate history tables) |
-| **EVM Implementation** | Interpreter | Interpreter | Interpreter + **parallel exec** | **JIT-compiled** (RyuJIT) | **Native compiled** (revm) |
-| **Block Import Speed** | ~3 blk/s | **85 blk/s** (28x faster) | ~76 blk/s (25x faster) | ~68 blk/s (22x faster) | Pipeline (est. 100x faster) |
-| **State Trie Reads** | LevelDB 1x (baseline) | PebbleDB 1.2x | **MDBX 3x faster** (B+ tree) | RocksDB 1.5x | **MDBX 3x faster** (B+ tree) |
-| **DB Compaction Stalls** | Frequent (LSM background) | Frequent (LSM background) | **None** (B+ tree, no compaction) | Rare (tuned bloom filters) | **None** (B+ tree, no compaction) |
-| **Transaction Execution** | Sequential | Sequential | **Parallel (exec3)** | Parallel (.NET TPL) | **Parallel (Rayon)** |
-| **State Commit** | Per-block flush | Per-block flush | **Batched** (per stage) | Per-block flush | **Batched** (per stage) |
-| **Snapshot/Pruning** | None (full archive) | **PBSS** (online pruning) | **Native pruning** (stage rollback) | Pruning supported | **Native pruning** (stage rollback) |
-| **Reorg Handling Speed** | Slow (full trie revert, seconds) | Slow (trie revert) | **Fast** (history lookup, ms) | Moderate (RocksDB revert) | **Fast** (history lookup, ms) |
-| **Cold Start Time** | ~30s | ~15s | **~5s** (mmap, OS page cache) | ~20s | **~3s** (mmap, OS page cache) |
-| **RPC Response Time** | ~50ms avg | ~30ms avg | **~5ms avg** (flat DB lookup) | ~20ms avg | **~3ms avg** (flat DB lookup) |
-| **Concurrent RPC Capacity** | Limited (GC pressure) | Limited (GC pressure) | **High** (staged reads, mmap) | High (.NET async) | **Highest** (Tokio, zero-copy) |
-| **RPC Nodes per Server** | ~1-2 per server | ~1-2 per server | **~8-10 per server** (low RAM) | ~3-4 per server | **~10-12 per server** (lowest RAM) |
-| **Chain Reorganization** | Slow (trie revert) | Slow (trie revert) | **Fast** (history index lookup) | Moderate | **Fast** (history index lookup) |
-| **Network Bandwidth** | No compression | **Snappy compressed** | **Snappy compressed** | **Snappy compressed** | **Snappy compressed** |
-| **GC Pause Impact** | 10-50ms (Go GC, ~25 missed blocks) | 10-50ms (Go GC) | 10-50ms (Go GC) | 5-20ms (.NET GC) | **0ms** (Rust owns memory, no GC) |
-| **Bug Class Diversity** | Go runtime only | Go runtime only | Go runtime only | **.NET runtime** (different CVE surface) | **Rust runtime** (different CVE surface) |
-| **Supply Chain Security** | Single compiler (gc) | Single compiler (gc) | Single compiler (gc) | **Separate: .NET SDK + NuGet** | **Separate: rustc + cargo** |
-| **Live Client Migration** | N/A (only option) | Hot-swap from v2.6.8 | **Hot-swap** (same state format optional) | **Hot-swap** (import from peers) | **Hot-swap** (import from peers) |
-| **Upstream Rebasing** | N/A (is upstream) | Merge from v2.6.8 | Rebase from Erigon | Rebase from Nethermind | Rebase from Reth |
+| Metric | XDC 2.6.8 (Geth 1.8.3) | GP5 (Geth 1.14) | Erigon v3 | Nethermind | Hyperledger Besu | Reth |
+|--------|------------------------|-----------------|-----------|------------|-----------------|------|
+| **Base / Year** | Geth 1.8.3, 2017 | Geth 1.14, 2024 | Custom, 2024 | .NET 8, 2024 | Java 21, 2024 | Rust, 2024 |
+| **Database Engine** | LevelDB (LSM-tree) | LevelDB + PebbleDB | MDBX (B+ tree, zero-copy) | RocksDB (LSM-tree) | RocksDB (Bonsai tries) | MDBX (B+ tree, zero-copy) |
+| **Read Amplification** | High — LSM compaction 10-30x | Moderate — Pebble optimized | Low — single B+ tree lookup | Moderate — bloom filters | Moderate | Low — single B+ tree lookup |
+| **Write Amplification** | High — 10-30x | Moderate | Low — 1-3x | Moderate | Moderate | Low — 1-3x |
+| **DB Compaction Stalls** | Frequent (LSM background compaction) | Frequent | None — B+ tree, no compaction | Rare (tuned bloom filters) | Rare | None — B+ tree, no compaction |
+| **State Storage Model** | Hash-based trie only | Hash trie + Path-based (PBSS) | Flat key-value + history index | Patricia trie (RocksDB) | Bonsai Tries (layered) | Flat key-value + history index |
+| **Archive Disk (ETH equiv.)** | ~12 TB est. | ~10 TB | ~2.5 TB | ~4 TB | ~8 TB | ~3 TB |
+| **State Pruning** | None — full archive only | Online via PBSS (no downtime) | Online, continuous | Online, automatic | Online (Bonsai) | Online, automatic |
+| **Historical State Access** | Full trie traversal per query | Full trie traversal | Direct flat lookup — ms | Direct lookup | Bonsai layered lookup | Direct flat lookup — ms |
+| **Reorg Handling** | Full trie revert — seconds | Full trie revert | History index lookup — ms | Moderate | Moderate | History index lookup — ms |
+| **Memory Model** | In-process GC | In-process GC | Memory-mapped I/O (mmap) | Managed .NET GC (JIT) | JVM GC (G1/ZGC) | Zero-copy MDBX — no GC |
+| **Peak RAM** | 8–16 GB | 8–16 GB | 2–8 GB | 4–8 GB | 4–8 GB | 2–6 GB |
+| **GC Pause** | 10–50 ms (Go GC) | 10–50 ms | 10–50 ms (Go GC) | 5–20 ms (.NET GC) | 5–15 ms (JVM ZGC) | 0 ms — Rust, no GC |
+| **Cold Start Time** | ~30s | ~15s | ~5s (mmap + OS page cache) | ~20s | ~25s | ~3s (mmap + OS page cache) |
+| **Sync Architecture** | Full sync only | Full + Snap sync | 8-stage pipeline | Full + Fast + Snap | Full + Fast + Snap | 13-stage pipeline |
+| **Block Import Speed** | ~3 blk/s | ~85 blk/s (28x) | ~76 blk/s (25x) | ~68 blk/s (22x) | ~50 blk/s (17x) | Est. pipeline — fastest |
+| **Snap Sync** | No | Yes | Yes | Yes | Yes | Yes |
+| **P2P Protocol** | eth/63 only | eth/68 | eth/68 | eth/68 | eth/68 | eth/68 |
+| **Network Bandwidth** | No compression | Snappy compressed | Snappy compressed | Snappy compressed | Snappy compressed | Snappy compressed |
+| **EVM Implementation** | Go interpreter | Go interpreter | Go interpreter + parallel exec | JIT-compiled (RyuJIT) | JVM JIT | Native compiled (revm, Rust) |
+| **Parallel EVM Execution** | No | No | Yes (exec3) | Partial (.NET TPL) | No | Roadmap |
+| **Transaction Execution** | Sequential | Sequential | Parallel (exec3) | Parallel (.NET TPL) | Sequential | Parallel (Rayon) |
+| **RPC Latency (eth_call)** | ~50 ms avg | ~30 ms avg | ~5 ms avg | ~20 ms avg | ~15 ms avg | ~3 ms avg |
+| **Concurrent RPC Capacity** | Low — GC pressure, single writer | Low — GC pressure | High — staged reads, mmap | High — .NET async | High — Vertx async | Highest — Tokio + zero-copy |
+| **RPC Nodes per Server** | 1–2 per server | 1–2 per server | 8–10 per server | 3–4 per server | 3–4 per server | 10–12 per server |
+| **JSON-RPC Coverage** | Partial subset | Full + debug | Full + trace | Full + trace | Full + trace | Full + trace |
+| **EIP Baseline** | ~EIP-161 (2017) | EIP-4844 | EIP-4844 | EIP-4844 | EIP-4844 | EIP-4844 |
+| **Language Safety** | Go — GC, race detector | Go — GC, race detector | Go — GC, race detector | C# — GC + JIT + null safety | Java — GC + null safety | Rust — compile-time memory safety, no CVE class |
+| **Concurrency Model** | Goroutines | Goroutines | Goroutines + staged pipeline | Task-based async (.NET TPL) | Vertx event loop | Tokio async + Rayon |
+| **Security Audits** | None on record | Partial | Partial | Independent | Independent (Consensys) | Independent |
+| **Enterprise Support** | No | No | No | Partial | Yes — Consensys backed | No |
+| **Runtime CVE Surface** | Go runtime only | Go runtime only | Go runtime only | .NET runtime (separate CVE set) | JVM runtime (separate CVE set) | Rust runtime (separate CVE set) |
+| **Supply Chain** | Single compiler (gc) | Single compiler (gc) | Single compiler (gc) | .NET SDK + NuGet | JDK + Maven | rustc + cargo |
 
 ---
 
-### 💡 Key Design Insights
+**Reading this as a CTO:**
 
-| Advantage | Best Client(s) | Concrete Numbers |
-|-----------|---------------|-----------------|
-| **Smallest archive disk** | Erigon, Reth | Full archive XDC: v2.6.8 ~2 TB → Erigon ~800 GB → Reth ~700 GB (est. 60-65% savings) |
-| **Lowest memory usage** | Erigon, Reth | Memory-mapped I/O lets OS manage pages; Erigon 2-8 GB vs v2.6.8 8-16 GB at same block height |
-| **Fastest EVM execution** | Reth (revm), NM (JIT) | Reth revm: native-compiled Rust; NM RyuJIT: JIT-compiled C# — both outperform Go interpreter |
-| **Best concurrency** | Reth (Tokio+Rayon) | Tokio async I/O + Rayon data parallelism across all CPU cores; no GC coordination pauses |
-| **Zero GC pauses** | Reth | Go GC can pause 10-50ms (= 5-25 missed blocks at 2s/block); Rust ownership model has zero runtime pauses |
-| **Fastest sync** | GP5, Erigon, Reth | GP5 85 blk/s (28x), Erigon 76 blk/s (25x), NM 68 blk/s (22x) vs v2.6.8 ~3 blk/s |
+XDC 2.6.8 is not a bad client — it is a stable, battle-tested implementation with 7 years of XDPoS-specific production hardening. The gap is architectural: it pre-dates snap sync, PBSS, flat-DB state models, parallel EVM, and modern P2P standards — not by design failure, but by the timeline it was built on.
+
+The risk is not that XDC 2.6.8 performs poorly today. The risk is that the network has no fallback if it does.
+
+XDC Innovation Labs is porting XDPoS consensus to each of these clients to close that gap.
 | **Fastest RPC** | Erigon, Reth | Flat DB: Erigon ~5ms avg, Reth ~3ms avg vs v2.6.8 ~50ms (trie traversal + LevelDB read amplification) |
 | **10x RPC density** | Erigon, Reth | Low RAM (2-6 GB) means 8-12 RPC nodes per server vs 1-2 with v2.6.8 — same hardware, 10x capacity |
 | **Instant reorg recovery** | Erigon, Reth | History stored as indexed deltas — reorg is a lookup, not a full trie recompute (seconds → milliseconds) |
@@ -232,7 +229,7 @@
 | **Supply chain attack** | 🔴 Single package ecosystem | 🟢 3 compilers, 3 ecosystems |
 | **Runtime CVE** | 🔴 All nodes on same Go runtime | 🟢 Go + .NET + Rust runtimes |
 
-> *Ethereum's multi-client approach prevented catastrophic failures during The Merge. XDC India brings the same resilience to XDC Network.*
+> *Ethereum's multi-client approach prevented catastrophic failures during The Merge. XDC Innovation Labs brings the same resilience to XDC Network.*
 
 ---
 
