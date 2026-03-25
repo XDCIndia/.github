@@ -167,13 +167,6 @@
 
 ---
 
-**Reading this as a CTO:**
-
-XDC 2.6.8 is not a bad client — it is a stable, battle-tested implementation with 7 years of XDPoS-specific production hardening. The gap is architectural: it pre-dates snap sync, PBSS, flat-DB state models, parallel EVM, and modern P2P standards — not by design failure, but by the timeline it was built on.
-
-The risk is not that XDC 2.6.8 performs poorly today. The risk is that the network has no fallback if it does.
-
-XDC Innovation Labs is porting XDPoS consensus to each of these clients to close that gap.
 | **Fastest RPC** | Erigon, Reth | Flat DB: Erigon ~5ms avg, Reth ~3ms avg vs v2.6.8 ~50ms (trie traversal + LevelDB read amplification) |
 | **10x RPC density** | Erigon, Reth | Low RAM (2-6 GB) means 8-12 RPC nodes per server vs 1-2 with v2.6.8 — same hardware, 10x capacity |
 | **Instant reorg recovery** | Erigon, Reth | History stored as indexed deltas — reorg is a lookup, not a full trie recompute (seconds → milliseconds) |
