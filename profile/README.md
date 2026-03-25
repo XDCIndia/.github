@@ -137,7 +137,7 @@
 | **Write Amplification** | High — 10-30x | Moderate | Low — 1-3x | Moderate | Moderate | Low — 1-3x |
 | **DB Compaction Stalls** | Frequent (LSM background compaction) | Frequent | None — B+ tree, no compaction | Rare (tuned bloom filters) | Rare | None — B+ tree, no compaction |
 | **State Storage Model** | Hash-based trie only | Hash trie + Path-based (PBSS) | Flat key-value + history index | Patricia trie (RocksDB) | Bonsai Tries (layered) | Flat key-value + history index |
-| **Archive Disk (ETH equiv.)** | ~12 TB est. | ~10 TB | ~2.5 TB | ~4 TB | ~8 TB | ~3 TB |
+| **Archive Disk (ETH equiv.)** | ~12 TB est. | ~10 TB | ~2.5 TB | ~14 TB+ | ~8 TB | ~3 TB |
 | **State Pruning** | None — full archive only | Online via PBSS (no downtime) | Online, continuous | Online, automatic | Online (Bonsai) | Online, automatic |
 | **Historical State Access** | Full trie traversal per query | Full trie traversal | Direct flat lookup — ms | Direct lookup | Bonsai layered lookup | Direct flat lookup — ms |
 | **Reorg Handling** | Full trie revert — seconds | Full trie revert | History index lookup — ms | Moderate | Moderate | History index lookup — ms |
@@ -174,6 +174,18 @@
 | **Different bug classes** | NM (C#), Reth (Rust) | A Go runtime exploit (CVE in gc runtime) cannot affect .NET or Rust clients simultaneously |
 | **Defense in depth** | NM + Reth | Three separate compilers (gc, .NET SDK, rustc) + three package ecosystems = supply chain attack surface split three ways |
 | **Easiest upstream rebase** | GP5 | Same Go/geth codebase as v2.6.8 — minimal merge conflicts, fastest to carry XDPoS patches forward |
+
+---
+
+## Key Advantages Over XDC 2.6.8 (per client)
+
+| Client | #1 Advantage | #2 Advantage | #3 Advantage | Best For |
+|--------|-------------|-------------|-------------|---------|
+| **GP5 (Geth 1.14)** | 28× faster sync (85 blk/s vs 3 blk/s) | Snap sync — new nodes join in hours, not weeks | PBSS online pruning — no archive growth | Drop-in replacement for XDC 2.6.8 |
+| **Erigon v3** | 60% less disk (2.5TB vs ~12TB archive equiv.) | 10× lower RPC latency (~5ms flat DB vs ~50ms trie) | 10× more RPC nodes per server (2GB RAM vs 8-16GB) | Archive/RPC operators |
+| **Nethermind** | JIT-compiled EVM (RyuJIT) — measurably faster tx execution | .NET runtime isolates from Go CVEs (different blast radius) | Parallel tx processing via .NET TPL | Enterprise/.NET environments |
+| **Reth** | Zero GC pauses — Rust ownership eliminates runtime GC entirely | Lowest latency RPC (~3ms) — Tokio async + zero-copy MDBX | 12+ RPC nodes per server (2GB RAM) | High-load RPC, latency-critical APIs |
+| **Besu** | Enterprise support via Consensys — SLA, audits, long-term maintenance | JVM ZGC — lowest GC pause of Java clients (sub-10ms) | Largest community of any Ethereum client | Enterprise, regulated finance |
 
 ---
 
